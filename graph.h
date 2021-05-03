@@ -52,6 +52,11 @@ class Graph {
     // Project graph operations (D* lite search algorithm)
     //----------------------------------------------------------------------
 
+    void create_grid(int width, int height);
+    void set_obstacle(int node);
+    bool is_obstacle(int node) const;
+    void remove_obstacle(int node);
+
     //----------------------------------------------------------------------
     // TODO: description
     //
