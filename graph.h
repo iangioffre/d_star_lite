@@ -11,8 +11,10 @@
 #define GRAPH_H
 
 #include <list>
+#include <unordered_map>
 
 typedef std::list<int> List;
+typedef std::unordered_map<int, int> Map;
 
 class Graph {
    public:
@@ -52,32 +54,12 @@ class Graph {
     // Project graph operations (D* lite search algorithm)
     //----------------------------------------------------------------------
 
+    int min_edges_bfs(int src, int dst) const;
+
     void create_grid(int width, int height);
     void set_obstacle(int node);
     bool is_obstacle(int node) const;
     void remove_obstacle(int node);
-
-    //----------------------------------------------------------------------
-    // TODO: description
-    //
-    // Conditions: TODO: conditions
-    //
-    // Input:
-    //  TODO: input details
-    //
-    // Output:
-    //  TODO: output details
-    //
-    // Returns: TODO: return details
-    //----------------------------------------------------------------------
-    void d_star_lite_shortest_path(int src, int dst, List& path) const;
-
-   private:
-    // helper functions for d* lite algorithm
-    void calculate_keys() const;
-    void initialize() const;
-    void update_vertex() const;
-    void compute_shortest_path() const;
 };
 
 #endif

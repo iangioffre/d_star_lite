@@ -16,6 +16,7 @@ add_executable(test_d_star
                graph.cpp
                test_d_star.cpp
                adjacency_list.cpp
-               adjacency_matrix.cpp)
+               adjacency_matrix.cpp
+               d_star_lite.cpp)
 target_link_libraries(test_d_star ${GTEST_LIBRARIES} pthread)
 

@@ -11,13 +11,67 @@
 
 #include <algorithm>
 #include <list>
+#include <queue>
 
 typedef std::list<int> List;
+typedef std::queue<int> Queue;
 const int MAX_INT = std::numeric_limits<int>::max();
 
 //----------------------------------------------------------------------
 // Project graph operations (D* lite search algorithm)
 //----------------------------------------------------------------------
+
+int Graph::min_edges_bfs(int src, int dst) const {
+    Map tree;
+    tree[src] = -1;
+    Map discovered;
+    for (int i = 0; i < vertex_count(); i++) {
+        discovered[i] = false;
+    }
+    discovered[src] = true;
+    Queue q;
+    q.push(src);
+    bool isFound = false;  // true if dst is found
+
+    while (q.size() > 0 && !isFound) {
+        int u = q.front();
+        q.pop();
+        List adj;
+        adjacent(u, adj);
+        for (int v : adj) {
+            // check if node has been discovered yet
+            if (!discovered[v]) {
+                discovered[v] = true;
+                tree[v] = u;
+                q.push(v);
+                if (v == dst) {
+                    isFound = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // if dst has been found, populate the list with the path from src to dst
+    List path;
+    if (isFound) {
+        path.clear();
+        int currNode = dst;
+        do {
+            path.push_front(currNode);
+            currNode = tree[currNode];
+        } while (currNode != src);
+        path.push_front(currNode);
+    } else {
+        path.clear();
+    }
+
+    int num_edges = path.size() - 1;
+    if (num_edges < 0) {
+        num_edges = 0;
+    }
+    return num_edges;
+}
 
 void Graph::create_grid(int width, int height) {
     for (int node = 0; node < vertex_count(); node++) {
@@ -103,33 +157,4 @@ void Graph::remove_obstacle(int node) {
             }
         }
     }
-}
-
-//----------------------------------------------------------------------
-// TODO: description
-//
-// Conditions: TODO: conditions
-//
-// Input:
-//  TODO: input details
-//
-// Output:
-//  TODO: output details
-//
-// Returns: TODO: return details
-//----------------------------------------------------------------------
-void Graph::d_star_lite_shortest_path(int src, int dst, List& path) const {
-}
-
-// helper functions for d* lite algorithm
-void Graph::calculate_keys() const {
-}
-
-void Graph::initialize() const {
-}
-
-void Graph::update_vertex() const {
-}
-
-void Graph::compute_shortest_path() const {
 }
