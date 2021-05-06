@@ -60,6 +60,9 @@ class Graph {
     void set_obstacle(int node);
     bool is_obstacle(int node) const;
     void remove_obstacle(int node);
+
+    int grid_width = 0;
+    int grid_height = 0;
 };
 
 #endif

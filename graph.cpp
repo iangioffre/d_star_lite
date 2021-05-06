@@ -74,6 +74,8 @@ int Graph::min_edges_bfs(int src, int dst) const {
 }
 
 void Graph::create_grid(int width, int height) {
+    grid_width = width;
+    grid_height = height;
     for (int node = 0; node < vertex_count(); node++) {
         // below
         if (node < vertex_count() - width) {
