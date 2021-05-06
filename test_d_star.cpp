@@ -15,8 +15,8 @@
 
 #include "adjacency_list.h"
 #include "adjacency_matrix.h"
-#include "graph.h"
 #include "d_star_lite.h"
+#include "graph.h"
 
 using namespace std;
 
@@ -38,7 +38,7 @@ void print_graph(const Graph& g) {
 }
 
 void print_path(list<int> path) {
-    while(!path.empty()) {
+    while (!path.empty()) {
         cout << path.front() << " ";
         path.pop_front();
     }
@@ -125,9 +125,9 @@ TEST(HelperTest, MinEdgesBFSTest) {
 //----------------------------------------------------------------------
 
 TEST(AlgorithmTest, NoObstacleDStarTest0to2) {
-    D_star_lite alg(0, 2, 3, 3); // start 0, end 2, 3x3 terrain
+    D_star_lite alg(0, 2, 3, 3);  // start 0, end 2, 3x3 terrain
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
@@ -137,10 +137,23 @@ TEST(AlgorithmTest, NoObstacleDStarTest0to2) {
     ASSERT_EQ(2, path.front());
 }
 
-TEST(AlgorithmTest, NoObstacleDStarTest5to3) {
-    D_star_lite alg(5, 3, 3, 3); // start 5, end 3, 3x3 terrain
+TEST(AlgorithmTest, NoObstacleDStarTest2to0) {
+    D_star_lite alg(2, 0, 3, 3);  // start 2, end 0, 3x3 terrain
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(2, path.size());
+    ASSERT_EQ(1, path.front());
+    path.pop_front();
+    ASSERT_EQ(0, path.front());
+}
+
+TEST(AlgorithmTest, NoObstacleDStarTest5to3) {
+    D_star_lite alg(5, 3, 3, 3);  // start 5, end 3, 3x3 terrain
+    list<int> path;
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
@@ -151,9 +164,9 @@ TEST(AlgorithmTest, NoObstacleDStarTest5to3) {
 }
 
 TEST(AlgorithmTest, NoObstacleDStarTest0to8) {
-    D_star_lite alg(0, 8, 3, 3); // start 0, end 8, 3x3 terrain
+    D_star_lite alg(0, 8, 3, 3);  // start 0, end 8, 3x3 terrain
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
@@ -161,9 +174,9 @@ TEST(AlgorithmTest, NoObstacleDStarTest0to8) {
 }
 
 TEST(AlgorithmTest, NoObstacleDStarTest0to15) {
-    D_star_lite alg(0, 15, 4, 4); // start 0, end 15, 3x3 terrain
+    D_star_lite alg(0, 15, 4, 4);  // start 0, end 15, 3x3 terrain
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
@@ -171,9 +184,9 @@ TEST(AlgorithmTest, NoObstacleDStarTest0to15) {
 }
 
 TEST(AlgorithmTest, NoObstacleDStarTest1to10) {
-    D_star_lite alg(1, 10, 4, 3); // start 0, end 8, 4x3 (wxh) terrain
+    D_star_lite alg(1, 10, 4, 3);  // start 0, end 8, 4x3 (wxh) terrain
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
@@ -182,34 +195,110 @@ TEST(AlgorithmTest, NoObstacleDStarTest1to10) {
 
 // SO - static obstacle, VO variable obstacle
 
-TEST(AlgorithmTest, ObstacleSO_1) {
+TEST(AlgorithmTest, ObstacleTestSO_1Right) {
     D_star_lite alg(0, 2, 3, 3);
     alg.set_obstacle(1);
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
     ASSERT_EQ(4, path.size());
 }
 
-TEST(AlgorithmTest, ObstacleSO_5) {
+TEST(AlgorithmTest, ObstacleTestSO_1Left) {
+    D_star_lite alg(2, 0, 3, 3);
+    alg.set_obstacle(1);
+    list<int> path;
+    while (!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(4, path.size());
+}
+
+TEST(AlgorithmTest, ObstacleTestSO_5) {
     D_star_lite alg(1, 9, 4, 3);
     alg.set_obstacle(1);
     list<int> path;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
     }
     ASSERT_EQ(4, path.size());
 }
 
-TEST(AlgorithmTest, ObstacleVO_2) {
+TEST(AlgorithmTest, ObstacleTestSO_OnePathUp) {
+    D_star_lite alg(0, 15, 4, 4);
+    for (int i = 4; i < 15;  i++) {
+        if (i % 4 == 0 || i % 4 == 1 || i % 4 == 2) {
+            alg.set_obstacle(i);
+        }
+    }
+    list<int> path;
+    while (!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(6, path.size());
+    int test[6] = {1, 2, 3, 7, 11, 15};
+    int i = 0;
+    while(!path.empty()) {
+        ASSERT_EQ(test[i], path.front());
+        path.pop_front();
+        i++;
+    }
+}
+
+TEST(AlgorithmTest, ObstacleTestSO_OnePathDown) {
+    D_star_lite alg(0, 15, 4, 4);
+    for (int i = 1; i < 12;  i++) {
+        if (i % 4 == 1 || i % 4 == 2 || i % 4 == 3) {
+            alg.set_obstacle(i);
+        }
+    }
+    list<int> path;
+    while (!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(6, path.size());
+    int test[6] = {4, 8, 12, 13, 14, 15};
+    int i = 0;
+    while(!path.empty()) {
+        ASSERT_EQ(test[i], path.front());
+        path.pop_front();
+        i++;
+    }
+}
+
+TEST(AlgorithmTest, ObstacleTestSO_OnePathThrough) {
+    D_star_lite alg(0, 15, 4, 4);
+    int obstacles[9] = {2, 3, 4, 6, 7, 8, 12, 13, 14};
+    for (int i = 0; i < 9; i++) {
+        alg.set_obstacle(obstacles[i]);
+    }
+    list<int> path;
+    while (!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(6, path.size());
+    int test[6] = {1, 5, 9, 10, 11, 15};
+    int i = 0;
+    while(!path.empty()) {
+        ASSERT_EQ(test[i], path.front());
+        path.pop_front();
+        i++;
+    }
+}
+
+TEST(AlgorithmTest, ObstacleTestVO_2) {
     D_star_lite alg(0, 3, 4, 3);
     alg.set_obstacle(2);
     list<int> path;
     int remove_vo_2 = true;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         if (remove_vo_2) {
             alg.remove_obstacle(2);
             remove_vo_2 = false;
@@ -220,12 +309,12 @@ TEST(AlgorithmTest, ObstacleVO_2) {
     ASSERT_EQ(3, path.size());
 }
 
-TEST(AlgorithmTest, ObstacleVO_5) {
+TEST(AlgorithmTest, ObstacleTestVO_5) {
     D_star_lite alg(0, 2, 3, 3);
     alg.set_obstacle(1);
     list<int> path;
     int remove_vo_1 = true;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
         if (remove_vo_1) {
@@ -236,7 +325,7 @@ TEST(AlgorithmTest, ObstacleVO_5) {
     ASSERT_EQ(4, path.size());
 }
 
-TEST(AlgorithmTest, ObstacleNoPath33) {
+TEST(AlgorithmTest, ObstacleNoPathTest33) {
     D_star_lite alg(0, 2, 3, 3);
     alg.set_obstacle(1);
     alg.set_obstacle(3);
@@ -244,7 +333,7 @@ TEST(AlgorithmTest, ObstacleNoPath33) {
     int last_node;
     int same_spot_for = 0;
     bool no_path_found = false;
-    while(!alg.destination_reached()) {
+    while (!alg.destination_reached()) {
         int curr_node = alg.move();
         path.push_back(curr_node);
         if (last_node == curr_node) {
@@ -258,8 +347,6 @@ TEST(AlgorithmTest, ObstacleNoPath33) {
     }
     ASSERT_TRUE(no_path_found);
 }
-
-// TODO: create tests for D Star Lite algorithm
 
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);

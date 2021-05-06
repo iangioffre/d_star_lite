@@ -10,11 +10,11 @@
 #include "d_star_lite.h"
 
 #include <algorithm>
-#include <queue>
 #include <iostream>
+#include <queue>
 
-typedef std::pair<int,int> Key;
-typedef std::list<std::pair<int,Key>> KeyStack;
+typedef std::pair<int, int> Key;
+typedef std::list<std::pair<int, Key>> KeyStack;
 
 const int INF = std::numeric_limits<int>::max();
 
@@ -35,7 +35,7 @@ D_star_lite::D_star_lite(int start_pos, int end_pos, int terrain_width, int terr
 
 int D_star_lite::move() {
     if (g[s_start] == INF) {
-        return curr_pos; // currently no known path (should change in testing because the obstacles will be removed)
+        return curr_pos;  // currently no known path (should change in testing because the obstacles will be removed)
     }
 
     // s_start = arg of adj(s_start) of min(c(s_start, adj) + g[s_start])
@@ -76,7 +76,7 @@ int D_star_lite::move() {
     // scan for changes (for easier implementation, assume all edges changed)
     k_m = k_m + h(s_last, s_start);
     s_last = s_start;
-    
+
     // for all edges
     for (int node = 0; node < terrain->vertex_count(); node++) {
         update_vertex(node);
@@ -84,7 +84,7 @@ int D_star_lite::move() {
 
     compute_shortest_path();
 
-    return curr_pos; // to track where the alg goes
+    return curr_pos;  // to track where the alg goes
 }
 
 void D_star_lite::set_obstacle(int node) {
@@ -104,7 +104,7 @@ Key D_star_lite::calculate_key(int s) {
     if (std::min(g[s], rhs[s]) == INF) {
         term1 = INF;
     } else {
-        term1= std::min(g[s], rhs[s]) + h(s_start, s) + k_m;
+        term1 = std::min(g[s], rhs[s]) + h(s_start, s) + k_m;
     }
     int term2 = std::min(g[s], rhs[s]);
     return std::make_pair(term1, term2);
@@ -140,14 +140,13 @@ void D_star_lite::update_vertex(int u) {
         rhs[u] = *std::min_element(adj_cost, adj_cost + adj.size());
     }
 
-
     for (auto u_pair : U) {
         if (u == u_pair.first) {
             U.remove(u_pair);
             break;
         }
     }
-    
+
     if (g[u] != rhs[u]) {
         U.push_back(std::make_pair(u, calculate_key(u)));
     }
