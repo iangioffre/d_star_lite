@@ -37,6 +37,14 @@ void print_graph(const Graph& g) {
     }
 }
 
+void print_path(list<int> path) {
+    while(!path.empty()) {
+        cout << path.front() << " ";
+        path.pop_front();
+    }
+    cout << endl;
+}
+
 //----------------------------------------------------------------------
 // Helper Tests
 //----------------------------------------------------------------------
@@ -170,6 +178,85 @@ TEST(AlgorithmTest, NoObstacleDStarTest1to10) {
         path.push_back(curr_node);
     }
     ASSERT_EQ(3, path.size());
+}
+
+// SO - static obstacle, VO variable obstacle
+
+TEST(AlgorithmTest, ObstacleSO_1) {
+    D_star_lite alg(0, 2, 3, 3);
+    alg.set_obstacle(1);
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(4, path.size());
+}
+
+TEST(AlgorithmTest, ObstacleSO_5) {
+    D_star_lite alg(1, 9, 4, 3);
+    alg.set_obstacle(1);
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(4, path.size());
+}
+
+TEST(AlgorithmTest, ObstacleVO_2) {
+    D_star_lite alg(0, 3, 4, 3);
+    alg.set_obstacle(2);
+    list<int> path;
+    int remove_vo_2 = true;
+    while(!alg.destination_reached()) {
+        if (remove_vo_2) {
+            alg.remove_obstacle(2);
+            remove_vo_2 = false;
+        }
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(3, path.size());
+}
+
+TEST(AlgorithmTest, ObstacleVO_5) {
+    D_star_lite alg(0, 2, 3, 3);
+    alg.set_obstacle(1);
+    list<int> path;
+    int remove_vo_1 = true;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+        if (remove_vo_1) {
+            alg.remove_obstacle(1);
+            remove_vo_1 = false;
+        }
+    }
+    ASSERT_EQ(4, path.size());
+}
+
+TEST(AlgorithmTest, ObstacleNoPath33) {
+    D_star_lite alg(0, 2, 3, 3);
+    alg.set_obstacle(1);
+    alg.set_obstacle(3);
+    list<int> path;
+    int last_node;
+    int same_spot_for = 0;
+    bool no_path_found = false;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+        if (last_node == curr_node) {
+            same_spot_for++;
+        }
+        if (same_spot_for == 5) {
+            no_path_found = true;
+            break;
+        }
+        last_node = curr_node;
+    }
+    ASSERT_TRUE(no_path_found);
 }
 
 // TODO: create tests for D Star Lite algorithm

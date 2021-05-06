@@ -23,6 +23,7 @@ class D_star_lite {
     D_star_lite(int start_pos, int end_pos, int terrain_width, int terrain_height);
     int move();
     void set_obstacle(int node);
+    void remove_obstacle(int node);
     bool destination_reached();
 
    private:

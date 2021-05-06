@@ -47,7 +47,7 @@ int D_star_lite::move() {
     for (int node : adj) {
         if (first) {
             arg_min = node;
-            if (g[node] == INF) {
+            if (g[node] == INF || c(s_start, node) == INF) {
                 arg_min_cost = INF;
             } else {
                 arg_min_cost = c(s_start, node) + g[node];
@@ -55,7 +55,7 @@ int D_star_lite::move() {
             first = false;
         } else {
             int cost;
-            if (g[node] == INF) {
+            if (g[node] == INF || c(s_start, node) == INF) {
                 cost = INF;
             } else {
                 cost = c(s_start, node) + g[node];
@@ -91,12 +91,21 @@ void D_star_lite::set_obstacle(int node) {
     terrain->set_obstacle(node);
 }
 
+void D_star_lite::remove_obstacle(int node) {
+    terrain->remove_obstacle(node);
+}
+
 bool D_star_lite::destination_reached() {
     return curr_pos == s_goal;
 }
 
 Key D_star_lite::calculate_key(int s) {
-    int term1= std::min(g[s], rhs[s]) + h(s_start, s) + k_m;
+    int term1;
+    if (std::min(g[s], rhs[s]) == INF) {
+        term1 = INF;
+    } else {
+        term1= std::min(g[s], rhs[s]) + h(s_start, s) + k_m;
+    }
     int term2 = std::min(g[s], rhs[s]);
     return std::make_pair(term1, term2);
 }
@@ -120,7 +129,7 @@ void D_star_lite::update_vertex(int u) {
         int adj_cost[adj.size()];
         int i = 0;
         for (int node : adj) {
-            if (g[node] == INF) {
+            if (g[node] == INF || c(u, node) == INF) {
                 adj_cost[i] = INF;
             } else {
                 adj_cost[i] = c(u, node) + g[node];
@@ -130,6 +139,7 @@ void D_star_lite::update_vertex(int u) {
 
         rhs[u] = *std::min_element(adj_cost, adj_cost + adj.size());
     }
+
 
     for (auto u_pair : U) {
         if (u == u_pair.first) {
