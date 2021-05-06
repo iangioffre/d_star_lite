@@ -18,5 +18,5 @@ Instead of searching for updated edges before updating the nodes, I update every
 **adjacency_matrix.\*** - a 2D array implementation for the graph interface  
 **d_star_lite.\*** - the D* Lite algorithm implementation as a class  
 **test_d_star.cpp** - the test file for the algorithm and supporting methods  
-**CMakeLists.txt** - the cmake file for project compilation  
+**CMakeLists.txt** - the CMake file for project compilation  
 **\*.pdf** - reports or write-ups for the project  
