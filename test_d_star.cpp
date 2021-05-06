@@ -38,10 +38,10 @@ void print_graph(const Graph& g) {
 }
 
 //----------------------------------------------------------------------
-// Adjacency Matrix Tests
+// Helper Tests
 //----------------------------------------------------------------------
 
-TEST(AdjacencyMatrixTest, CreateGridTest) {
+TEST(HelperTest, CreateGridTest) {
     AdjacencyMatrix g(9);
     int width = 3;
     int height = 3;
@@ -67,7 +67,7 @@ TEST(AdjacencyMatrixTest, CreateGridTest) {
     }
 }
 
-TEST(AdjacencyMatrixTest, ObstacleTest) {
+TEST(HelperTest, ObstacleTest) {
     AdjacencyMatrix g(16);
     int width = 4;
     int height = 4;
@@ -93,7 +93,7 @@ TEST(AdjacencyMatrixTest, ObstacleTest) {
     }
 }
 
-TEST(AdjacencyMatrixTest, MinEdgesBFSTest) {
+TEST(HelperTest, MinEdgesBFSTest) {
     AdjacencyMatrix g(5);
     g.set_edge(0, 0, 1);
     g.set_edge(0, 0, 3);
@@ -110,6 +110,66 @@ TEST(AdjacencyMatrixTest, MinEdgesBFSTest) {
     ASSERT_EQ(dists[2], 2);
     ASSERT_EQ(dists[3], 1);
     ASSERT_EQ(dists[4], 3);
+}
+
+//----------------------------------------------------------------------
+// Algorithm Tests
+//----------------------------------------------------------------------
+
+TEST(AlgorithmTest, NoObstacleDStarTest0to2) {
+    D_star_lite alg(0, 2, 3, 3); // start 0, end 2, 3x3 terrain
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(2, path.size());
+    ASSERT_EQ(1, path.front());
+    path.pop_front();
+    ASSERT_EQ(2, path.front());
+}
+
+TEST(AlgorithmTest, NoObstacleDStarTest5to3) {
+    D_star_lite alg(5, 3, 3, 3); // start 5, end 3, 3x3 terrain
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(2, path.size());
+    ASSERT_EQ(4, path.front());
+    path.pop_front();
+    ASSERT_EQ(3, path.front());
+}
+
+TEST(AlgorithmTest, NoObstacleDStarTest0to8) {
+    D_star_lite alg(0, 8, 3, 3); // start 0, end 8, 3x3 terrain
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(4, path.size());
+}
+
+TEST(AlgorithmTest, NoObstacleDStarTest0to15) {
+    D_star_lite alg(0, 15, 4, 4); // start 0, end 15, 3x3 terrain
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(6, path.size());
+}
+
+TEST(AlgorithmTest, NoObstacleDStarTest1to10) {
+    D_star_lite alg(1, 10, 4, 3); // start 0, end 8, 4x3 (wxh) terrain
+    list<int> path;
+    while(!alg.destination_reached()) {
+        int curr_node = alg.move();
+        path.push_back(curr_node);
+    }
+    ASSERT_EQ(3, path.size());
 }
 
 // TODO: create tests for D Star Lite algorithm
